@@ -10,13 +10,13 @@ public class FullscreenFrame extends JFrame{
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        //Make it fullscreen
+        // Make it fullscreen
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setSize(new Dimension(200,200));
+        //setSize(new Dimension(200,200));
         setAlwaysOnTop(true);
         setUndecorated(true);
 
-        //Display the window.
+        // Display the window.
         setVisible(true);
     }
 

@@ -13,8 +13,6 @@ public class MainMenuPanel extends TerminalPanel{
             case "test" :
                 System.out.println("This is my first command");
                 break;
-            default:
-                System.out.println("Unknown Command");
         }
         super.parseCommand(s);
     }
