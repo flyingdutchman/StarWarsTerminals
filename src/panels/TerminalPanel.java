@@ -1,17 +1,12 @@
 package panels;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.PrintStream;
 
 public class TerminalPanel extends JPanel {
 
@@ -21,7 +16,6 @@ public class TerminalPanel extends JPanel {
 
     private JTextPane displayPane;
     private JTextField commandPane;
-    private Document doc;
     private SimpleAttributeSet set;
 
     public TerminalPanel() {
@@ -35,7 +29,6 @@ public class TerminalPanel extends JPanel {
         displayPane.setHighlighter(null);
         displayPane.setBackground(terminalColor);
         displayPane.setFont(consoleFont);
-        doc = displayPane.getStyledDocument();
 
         //Parametrage de la zone d'entrée
         commandPane = new JTextField();
@@ -54,21 +47,13 @@ public class TerminalPanel extends JPanel {
 
         set = new SimpleAttributeSet();
         set.addAttribute(StyleConstants.CharacterConstants.Foreground, fontColor);
-        String initString[] =
-                { "Bienvenue sur le système d'échange commercial",
-                    "Veuillez lire les conditions bla bla bcp de texte !"};
-
-        try {
-            for (int i = 0; i < initString.length; i ++) {
-                doc.insertString(doc.getLength(), initString[i] + "\n",
-                        set);
-            }
-        } catch (BadLocationException ble) {
-            System.err.println("Couldn't insert initial text.");
-        }
 
         // Set the attributes before adding text
         displayPane.setCharacterAttributes(set, true);
+
+        // Permet d'utiliser le JTextPane comme une sortie console classique
+        PrintStream printStream = new PrintStream(new tools.CustomOutputStream(displayPane, set));
+        System.setOut(printStream);
 
         add(displayPane, BorderLayout.CENTER);
         add(commandPane, BorderLayout.SOUTH);

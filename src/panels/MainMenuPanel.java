@@ -1,12 +1,9 @@
 package panels;
 
-import javax.swing.*;
-
 public class MainMenuPanel extends TerminalPanel{
 
     public MainMenuPanel() {
         super();
-
     }
 
     //Define new commands for the main menu
@@ -15,6 +12,9 @@ public class MainMenuPanel extends TerminalPanel{
         switch (s) {
             case "test" :
                 System.out.println("This is my first command");
+                break;
+            default:
+                System.out.println("Unknown Command");
         }
         super.parseCommand(s);
     }
