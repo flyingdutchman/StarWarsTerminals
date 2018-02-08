@@ -10,14 +10,20 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(() -> {
             FullscreenFrame fullscreenFrame = new FullscreenFrame();
             fullscreenFrame.setLayout(new BorderLayout());
-            TerminalPanel panel = null;
+            TerminalPanel panel;
 
             if(args.length != 0) {
                 switch(args[0]) {
                     case "commercial": panel = new CommercialPanel();
                         break;
+                    default:
+                        System.err.println("Please enter valid argument");
+                        return;
                 }
+
                 fullscreenFrame.setVisible(true);
+                fullscreenFrame.add(panel, BorderLayout.CENTER);
+
             } else {
                 System.err.println("Please enter argument");
                 return;
