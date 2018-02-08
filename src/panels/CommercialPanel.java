@@ -1,17 +1,14 @@
 package panels;
 
-import rtf.AdvancedRTFEditorKit;
-
 import javax.swing.text.rtf.RTFEditorKit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
-public class MainMenuPanel extends TerminalPanel{
+public class CommercialPanel extends TerminalPanel{
 
-    public MainMenuPanel() {
+    public CommercialPanel() {
         super();
     }
 
@@ -19,9 +16,9 @@ public class MainMenuPanel extends TerminalPanel{
 
         String page = "test.rtf";
 
-        displayPane.setEditorKit(new RTFEditorKit());
+        mainPane.setEditorKit(new RTFEditorKit());
         try {
-            displayPane.read(new FileInputStream(page), displayPane.getDocument());
+            mainPane.read(new FileInputStream(page), mainPane.getDocument());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -34,7 +31,7 @@ public class MainMenuPanel extends TerminalPanel{
         File file = new File("test.html");
 
         try {
-            displayPane.setPage(file.toURI().toURL());
+            mainPane.setPage(file.toURI().toURL());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -14,6 +14,7 @@ public class TerminalPanel extends JPanel {
     private final Font consoleFont = new Font("Courier New", Font.PLAIN, 20);
     private final Color fontColor = Color.LIGHT_GRAY;
 
+    protected JTextPane mainPane;
     protected JTextPane displayPane;
     protected JTextField commandPane;
     protected JScrollPane scrollPane;
@@ -24,14 +25,20 @@ public class TerminalPanel extends JPanel {
         setLayout(new BorderLayout());
 
         //Affichage du texte de la console
+        mainPane = new JTextPane();
+        mainPane.setCaretPosition(0);
+        mainPane.setEditable(false);
+        mainPane.setHighlighter(null);
+        mainPane.setBackground(terminalColor);
+        mainPane.setFont(consoleFont);
+
         displayPane = new JTextPane();
-        displayPane.setCaretPosition(0);
         displayPane.setEditable(false);
         displayPane.setHighlighter(null);
         displayPane.setBackground(terminalColor);
         displayPane.setFont(consoleFont);
 
-        scrollPane = new JScrollPane(displayPane);
+        scrollPane = new JScrollPane(mainPane);
         scrollPane.setBackground(terminalColor);
         scrollPane.setBorder(null);
         // Make the pane scrollable but not visible
@@ -56,10 +63,10 @@ public class TerminalPanel extends JPanel {
         set.addAttribute(StyleConstants.CharacterConstants.Foreground, fontColor);
 
         // Set the attributes before adding text
-        displayPane.setCharacterAttributes(set, true);
+        mainPane.setCharacterAttributes(set, true);
 
         // Permet d'utiliser le JTextPane comme une sortie console classique
-        PrintStream printStream = new PrintStream(new tools.CustomOutputStream(displayPane, set));
+        PrintStream printStream = new PrintStream(new tools.CustomOutputStream(mainPane, set));
         System.setOut(printStream);
 
         add(scrollPane, BorderLayout.CENTER);
@@ -69,7 +76,7 @@ public class TerminalPanel extends JPanel {
     public void parseCommand(String s) {
         //Setting overall commands
         switch (s) {
-            case "clear" : displayPane.setText("");
+            case "clear" : mainPane.setText("");
                 break;
             default:
                 System.out.println("Unknown Command");

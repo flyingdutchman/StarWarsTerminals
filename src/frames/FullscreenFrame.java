@@ -15,9 +15,6 @@ public class FullscreenFrame extends JFrame{
         //setSize(new Dimension(200,200));
         setAlwaysOnTop(true);
         setUndecorated(true);
-
-        // Display the window.
-        setVisible(true);
     }
 
 }

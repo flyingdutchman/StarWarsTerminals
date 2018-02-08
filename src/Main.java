@@ -1,5 +1,6 @@
 import frames.FullscreenFrame;
-import panels.MainMenuPanel;
+import panels.CommercialPanel;
+import panels.TerminalPanel;
 
 import java.awt.*;
 
@@ -9,8 +10,18 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(() -> {
             FullscreenFrame fullscreenFrame = new FullscreenFrame();
             fullscreenFrame.setLayout(new BorderLayout());
-            MainMenuPanel mainMenuPanel = new MainMenuPanel();
-            fullscreenFrame.add(mainMenuPanel, BorderLayout.CENTER);
+            TerminalPanel panel = null;
+
+            if(args.length != 0) {
+                switch(args[0]) {
+                    case "commercial": panel = new CommercialPanel();
+                        break;
+                }
+                fullscreenFrame.setVisible(true);
+            } else {
+                System.err.println("Please enter argument");
+                return;
+            }
         });
     }
 
