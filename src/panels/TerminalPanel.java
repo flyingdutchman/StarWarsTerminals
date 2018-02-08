@@ -14,10 +14,10 @@ public class TerminalPanel extends JPanel {
     private final Font consoleFont = new Font("Courier New", Font.PLAIN, 20);
     private final Color fontColor = Color.LIGHT_GRAY;
 
-    private JTextPane displayPane;
-    private JTextField commandPane;
-    private JScrollPane scrollPane;
-    private SimpleAttributeSet set;
+    protected JTextPane displayPane;
+    protected JTextField commandPane;
+    protected JScrollPane scrollPane;
+    protected SimpleAttributeSet set;
 
     public TerminalPanel() {
 
@@ -74,6 +74,5 @@ public class TerminalPanel extends JPanel {
             default:
                 System.out.println("Unknown Command");
         }
-        commandPane.setText("");
     }
 }
