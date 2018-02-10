@@ -1,5 +1,5 @@
 import frames.FullscreenFrame;
-import panels.CommercialPanel;
+import panels.ShipPanel;
 import panels.TerminalPanel;
 
 import java.awt.*;
@@ -14,10 +14,15 @@ public class Main {
 
             if(args.length != 0) {
                 switch(args[0]) {
-                    case "commercial": panel = new CommercialPanel();
+                    case "vaisseau":
+                        if(args.length != 4) {
+                            System.err.println("Veuillez entrer le nom de l'équipage, le nom du vaisseau et le nom du capitaine");
+                            return;
+                        }
+                        panel = new ShipPanel(args[1], args[2], args[3]);
                         break;
                     default:
-                        System.err.println("Please enter valid argument");
+                        System.err.println("Veuillez préciser un paramètre valide");
                         return;
                 }
 
@@ -25,7 +30,7 @@ public class Main {
                 fullscreenFrame.add(panel, BorderLayout.CENTER);
 
             } else {
-                System.err.println("Please enter argument");
+                System.err.println("Veuillez préciser un paramètre");
                 return;
             }
         });

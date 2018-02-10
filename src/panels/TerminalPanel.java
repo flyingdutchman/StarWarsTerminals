@@ -1,8 +1,10 @@
 package panels;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -11,7 +13,7 @@ import java.io.PrintStream;
 public class TerminalPanel extends JPanel {
 
     private final Color terminalColor = new Color(20,20,27);
-    private final Font consoleFont = new Font("Courier New", Font.PLAIN, 20);
+    private final Font consoleFont = new Font("Monospaced", Font.PLAIN, 20);
     private final Color fontColor = Color.LIGHT_GRAY;
 
     protected JTextPane mainPane;
@@ -19,6 +21,7 @@ public class TerminalPanel extends JPanel {
     protected JTextField commandPane;
     protected JScrollPane scrollPane;
     protected SimpleAttributeSet set;
+    protected StyledDocument doc;
 
     public TerminalPanel() {
 
@@ -31,18 +34,21 @@ public class TerminalPanel extends JPanel {
         mainPane.setHighlighter(null);
         mainPane.setBackground(terminalColor);
         mainPane.setFont(consoleFont);
+        doc = mainPane.getStyledDocument();
 
+        //Ajout du scroll
+        scrollPane = new JScrollPane(mainPane);
+        scrollPane.setBackground(terminalColor);
+        scrollPane.setBorder(null);
+        // Rendre barre de scroll invisible
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
+
+        //Affichage de nouvelle fenêtre
         displayPane = new JTextPane();
         displayPane.setEditable(false);
         displayPane.setHighlighter(null);
         displayPane.setBackground(terminalColor);
         displayPane.setFont(consoleFont);
-
-        scrollPane = new JScrollPane(mainPane);
-        scrollPane.setBackground(terminalColor);
-        scrollPane.setBorder(null);
-        // Make the pane scrollable but not visible
-        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0,0));
 
         //Parametrage de la zone d'entrée
         commandPane = new JTextField();
@@ -74,7 +80,7 @@ public class TerminalPanel extends JPanel {
     }
 
     public void parseCommand(String s) {
-        //Setting overall commands
+        //Commandes générales
         switch (s) {
             case "clear" : mainPane.setText("");
                 break;
