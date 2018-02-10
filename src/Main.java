@@ -15,11 +15,12 @@ public class Main {
             if(args.length != 0) {
                 switch(args[0]) {
                     case "vaisseau":
-                        if(args.length != 4) {
-                            System.err.println("Veuillez entrer le nom de l'équipage, le nom du vaisseau et le nom du capitaine");
+                        //TODO Effacer les paramètres d'entrées et lire directement le CSV
+                        if(args.length != 3) {
+                            System.err.println("Veuillez entrer le nom de l'équipage, le nom du vaisseau");
                             return;
                         }
-                        panel = new ShipPanel(args[1], args[2], args[3]);
+                        panel = new ShipPanel(args[1], args[2]);
                         break;
                     default:
                         System.err.println("Veuillez préciser un paramètre valide");

@@ -1,7 +1,5 @@
 package panels;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 import javax.swing.text.rtf.RTFEditorKit;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,22 +9,29 @@ import com.github.lalyos.jfiglet.FigletFont;
 
 public class ShipPanel extends TerminalPanel{
 
-    String nomVaisseau;
-    String nomEquipage;
-    String nomCapitaine;
+    private String nomVaisseau;
+    private String nomEquipage;
 
-    public ShipPanel(String nomEquipage, String nomVaisseau, String nomCapitaine) {
+    public ShipPanel(String nomEquipage, String nomVaisseau) {
         super();
         this.nomEquipage = nomEquipage;
         this.nomVaisseau = nomVaisseau;
-        this.nomCapitaine = nomCapitaine;
         init();
     }
 
     public void init() {
-        String asciiArt = FigletFont.convertOneLine("Panneau de contrôle");
-        String nomVaisseauArt = FigletFont.convertOneLine(nomVaisseau);
-        //TODO Màj le JFiglet de 0.0.3 à 0.0.8 (pour changer de police)
+        String asciiArt = null;
+        String nomVaisseauArt = null;
+        try {
+            asciiArt = FigletFont.convertOneLine("Panneau de contrôle");
+            nomVaisseauArt = FigletFont.convertOneLine(nomVaisseau);
+            //TODO Polices figlet custom impossibles
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println(asciiArt+"\n"+nomVaisseauArt);
         System.out.println("################################################################################");
         System.out.println("COMMANDES DISPONIBLES :\n" +
@@ -56,6 +61,7 @@ public class ShipPanel extends TerminalPanel{
 
         try {
             mainPane.setPage(file.toURI().toURL());
+            //TODO Set page sur un nouveau JTextPane
         } catch (IOException e) {
             e.printStackTrace();
         }
