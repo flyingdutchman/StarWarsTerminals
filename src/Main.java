@@ -22,6 +22,8 @@ public class Main {
                         }
                         panel = new ShipPanel(args[1], args[2]);
                         break;
+                    case "init" : new DataInit();
+                        return;
                     default:
                         System.err.println("Veuillez préciser un paramètre valide");
                         return;
