@@ -7,7 +7,7 @@ import java.io.IOException;
 import com.github.lalyos.jfiglet.FigletFont;
 
 
-public class ShipPanel extends TerminalPanel{
+public class ShipPanel extends TerminalPanel {
 
     private String nomVaisseau;
     private String nomEquipage;
@@ -16,33 +16,10 @@ public class ShipPanel extends TerminalPanel{
         super();
         this.nomEquipage = nomEquipage;
         this.nomVaisseau = nomVaisseau;
-        init();
+        writeHeader();
     }
 
-    public void init() {
-        String asciiArt = null;
-        String nomVaisseauArt = null;
-        try {
-            asciiArt = FigletFont.convertOneLine("Panneau de contrôle");
-            nomVaisseauArt = FigletFont.convertOneLine(nomVaisseau);
-            //TODO Polices figlet custom impossibles
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(asciiArt+"\n"+nomVaisseauArt);
-        System.out.println("################################################################################");
-        System.out.println("COMMANDES DISPONIBLES :\n" +
-                "- [1] Journal de bord\n" +
-                "- [2] Consulter équipement du vaisseau\n" +
-                "- [3] Modifier équipement du vaisseau\n" +
-                "- [4] Accèder à l'Holonet\n" +
-                "- [5] Demande Authorisation de décollage\n\n");
-
-    }
-
+    //Code pour loader un fichier rtf
     public void loadFile() {
 
         String page = "test.rtf";
@@ -55,6 +32,7 @@ public class ShipPanel extends TerminalPanel{
         }
     }
 
+    //Code pour loader un fichier HTML
     public void loadHTML() {
 
         File file = new File("test.html");
@@ -67,17 +45,52 @@ public class ShipPanel extends TerminalPanel{
         }
     }
 
+    @Override
+    public void writeHelp() {
+        System.out.println(
+                "\nCOMMANDES DISPONIBLES :\n" +
+                "- [1] Journal de bord\n" +
+                "- [2] Consulter équipement du vaisseau\n" +
+                "- [3] Modifier équipement du vaisseau\n" +
+                "- [4] Accèder à l'Holonet\n" +
+                "- [5] Demande Authorisation de décollage\n\n");
+        super.writeHelp();
+    }
+
+    @Override
+    public void writeHeader() {
+        String asciiArt = null;
+        String nomVaisseauArt = null;
+        try {
+            asciiArt = FigletFont.convertOneLine("Panneau de contrôle");
+            nomVaisseauArt = FigletFont.convertOneLine(nomVaisseau);
+            //TODO Polices figlet custom impossibles
+        } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(asciiArt+"\n"+nomVaisseauArt);
+        System.out.println("################################################################################");
+        writeHelp();
+    }
+
+    public void showLog() {
+
+    }
+
     //Define new commands for the main menu
     @Override
     public void parseCommand(String s) {
         commandPane.setText("");
         switch (s) {
-            case "test" :
-                System.out.println("This is my first command");
+            case "1" : showLog();
                 break;
-            case "load rtf" : loadFile();
+            case "2" :
                 break;
-            case "load html" : loadHTML();
+            case "3" :
+                break;
+            case "4" :
+                break;
+            case "5" :
                 break;
             default: super.parseCommand(s);
         }
