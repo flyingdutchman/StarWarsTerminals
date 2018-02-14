@@ -1,21 +1,52 @@
 package panels;
 
+import javax.crypto.Cipher;
 import javax.swing.text.rtf.RTFEditorKit;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 import com.github.lalyos.jfiglet.FigletFont;
+import tools.Crypto;
 
 
 public class ShipPanel extends TerminalPanel {
 
+    private final String LOG_FILE_NAME = "logs.html.encrypted";
+
     private String nomVaisseau;
     private String nomEquipage;
+    private String codeEquipage;
 
-    public ShipPanel(String nomEquipage, String nomVaisseau) {
+    public ShipPanel(String codeEquipage) {
         super();
-        this.nomEquipage = nomEquipage;
-        this.nomVaisseau = nomVaisseau;
+
+        this.codeEquipage = codeEquipage;
+
+        File encryptedCsv = new File("data/vaisseau/spaceship_list.csv.encrypted");
+        File temp = new File("data/temp/temp");
+        Crypto.fileProcessor(Cipher.DECRYPT_MODE, encryptedCsv, temp);
+
+        Scanner scanner;
+        try {
+            scanner = new Scanner(temp);
+            scanner.useDelimiter(",");
+            while(scanner.hasNext()){
+                String next = scanner.next();
+                if(next.equals(codeEquipage))  {
+                    nomEquipage = scanner.next();
+                    nomVaisseau = scanner.next();
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("Could not open crypted CSV");
+            e.printStackTrace();
+        }
+
+        temp.delete();
+
         writeHeader();
     }
 
@@ -74,7 +105,13 @@ public class ShipPanel extends TerminalPanel {
     }
 
     public void showLog() {
+        // Etape 1 Trouver le fichier
 
+        File toDecipher = new File("data/vaisseau/"+nomVaisseau+"/"+LOG_FILE_NAME);
+
+        // Etape 2 le decipher
+
+        // Etape 3 l'afficher dans DisplayPane
     }
 
     //Define new commands for the main menu

@@ -16,11 +16,11 @@ public class Main {
                 switch(args[0]) {
                     case "vaisseau":
                         //TODO Effacer les paramètres d'entrées et lire directement le CSV
-                        if(args.length != 3) {
-                            System.err.println("Veuillez entrer le nom de l'équipage, le nom du vaisseau");
+                        if(args.length != 2) {
+                            System.err.println("Veuillez entrer le code de l'équipage");
                             return;
                         }
-                        panel = new ShipPanel(args[1], args[2]);
+                        panel = new ShipPanel(args[0]);
                         break;
                     case "init" : new DataInit();
                         return;

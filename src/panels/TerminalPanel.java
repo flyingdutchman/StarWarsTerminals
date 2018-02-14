@@ -7,6 +7,8 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.PrintStream;
 
 public abstract class TerminalPanel extends JPanel {
@@ -33,6 +35,29 @@ public abstract class TerminalPanel extends JPanel {
         mainPane.setHighlighter(null);
         mainPane.setBackground(terminalColor);
         mainPane.setFont(consoleFont);
+        mainPane.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                SwingUtilities.invokeLater(() -> commandPane.requestFocus());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+
+            }
+        });
         doc = mainPane.getStyledDocument();
 
         //Ajout du scroll
@@ -51,9 +76,6 @@ public abstract class TerminalPanel extends JPanel {
 
         //Parametrage de la zone d'entrée
         commandPane = new JTextField();
-        commandPane.setBackground(terminalColor);
-        commandPane.setFont(consoleFont);
-        commandPane.setForeground(fontColor);
         commandPane.addKeyListener(new KeyAdapter() {
             //Permet de simuler le comportement d'une console
             @Override
@@ -63,6 +85,13 @@ public abstract class TerminalPanel extends JPanel {
             }
         });
         commandPane.addActionListener(e -> parseCommand(commandPane.getText())); //Parse command when hit enter
+
+        SwingUtilities.invokeLater(() -> {
+            commandPane.setBackground(terminalColor);
+            commandPane.setFont(consoleFont);
+            commandPane.setForeground(fontColor);
+            commandPane.requestFocus();
+        });
 
         set = new SimpleAttributeSet();
         set.addAttribute(StyleConstants.CharacterConstants.Foreground, fontColor);
