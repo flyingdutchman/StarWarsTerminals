@@ -57,6 +57,8 @@ public class DataInit {
 
         try {
             Crypto.fileProcessor(Cipher.ENCRYPT_MODE,key,inputFile,encryptedFile);
+            //Pour Decrypt :
+            //Crypto.fileProcessor(Cipher.DECRYPT_MODE,key,encryptedFile,decryptedFile);
             System.out.println("Succès");
         } catch (Exception e) {
             System.err.println("Could not encrypt : "+encryptedFile.getName());
