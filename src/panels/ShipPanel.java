@@ -1,9 +1,7 @@
 package panels;
 
 import javax.crypto.Cipher;
-import javax.swing.text.rtf.RTFEditorKit;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -25,7 +23,7 @@ public class ShipPanel extends TerminalPanel {
 
         this.codeEquipage = codeEquipage;
 
-        File encryptedCsv = new File("data/vaisseau/spaceship_list.csv.encrypted");
+        File encryptedCsv = new File("data/terminal_vaisseau/spaceship_list.csv.encrypted");
         File temp = new File(TEMP_LOCATION);
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, encryptedCsv, temp);
 
@@ -51,32 +49,6 @@ public class ShipPanel extends TerminalPanel {
         temp.delete();
 
         writeHeader();
-    }
-
-    //Code pour loader un fichier rtf
-    public void loadFile() {
-
-        String page = "test.rtf";
-
-        mainPane.setEditorKit(new RTFEditorKit());
-        try {
-            mainPane.read(new FileInputStream(page), mainPane.getDocument());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Code pour loader un fichier HTML
-    public void loadHTML() {
-
-        File file = new File("test.html");
-
-        try {
-            mainPane.setPage(file.toURI().toURL());
-            //TODO Set page sur un nouveau JTextPane
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -110,11 +82,11 @@ public class ShipPanel extends TerminalPanel {
     //Define new commands for the main menu
     @Override
     public void parseCommand(String s) {
-        commandPane.setText("");
+        clearCommand();
         switch (s) {
             case "1" : showLog();
                 break;
-            case "2" : loadHTML();
+            case "2" : showShipEquipment();
                 break;
             case "3" :
                 break;
@@ -129,7 +101,7 @@ public class ShipPanel extends TerminalPanel {
     private void showLog() {
         // Etape 1 Trouver le fichier
 
-        File toDecipher = new File("data/vaisseau/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME);
+        File toDecipher = new File("data/terminal_vaisseau/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME);
 
         // Etape 2 le decipher
 
@@ -137,6 +109,10 @@ public class ShipPanel extends TerminalPanel {
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
 
         // Etape 3 l'afficher dans DisplayPane
-        setDisplay(temp);
+        setTempDisplay(temp);
+    }
+
+    private void showShipEquipment() {
+
     }
 }

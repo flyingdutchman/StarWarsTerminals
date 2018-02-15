@@ -16,18 +16,39 @@ public abstract class TerminalPanel extends JPanel {
     private final Font consoleFont = new Font("Monospaced", Font.PLAIN, 20);
     private final Color fontColor = Color.LIGHT_GRAY;
 
-    JTextPane mainPane;
-    protected JTextPane displayPane;
-    JTextField commandPane;
-    protected JScrollPane scrollPane;
-    protected SimpleAttributeSet set;
-    protected StyledDocument doc;
+
+    private JTextPane mainPane;
+    private JTextPane displayPane;
+    private JTextField commandPane;
+    private JScrollPane scrollPane;
+    private SimpleAttributeSet set;
+    private StyledDocument doc;
+    private File tmp;
 
     private boolean readMode;
 
     public TerminalPanel() {
 
         setLayout(new BorderLayout());
+
+        MouseListener changeFocus = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                SwingUtilities.invokeLater(() -> commandPane.requestFocus());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {}
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {}
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {}
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {}
+        };
 
         //Affichage du texte de la console
         mainPane = new JTextPane();
@@ -36,29 +57,7 @@ public abstract class TerminalPanel extends JPanel {
         mainPane.setHighlighter(null);
         mainPane.setBackground(terminalColor);
         mainPane.setFont(consoleFont);
-        mainPane.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                SwingUtilities.invokeLater(() -> commandPane.requestFocus());
-            }
-
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent mouseEvent) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent mouseEvent) {
-
-            }
-        });
+        mainPane.addMouseListener(changeFocus);
         doc = mainPane.getStyledDocument();
 
         //Ajout du scroll
@@ -74,6 +73,7 @@ public abstract class TerminalPanel extends JPanel {
         displayPane.setHighlighter(null);
         displayPane.setBackground(terminalColor);
         displayPane.setFont(consoleFont);
+        displayPane.addMouseListener(changeFocus);
 
         //Parametrage de la zone d'entrée
         commandPane = new JTextField();
@@ -130,21 +130,21 @@ public abstract class TerminalPanel extends JPanel {
     public void writeHelp() {
         System.out.println(
                 "- Pour réafficher les commandes tapez \"aide\"\n" +
-                "- Pour effacer la console tapez \"clear\"\n\n");
+                "- Pour effacer la console tapez \"effacer\"\n\n");
     }
 
-    public void setDisplay(File file) {
+    void setTempDisplay(File file) {
+        tmp = file;
         setReadMode(true);
         try {
             displayPane.setPage(file.toURI().toURL());
             scrollPane.setViewportView(displayPane);
-            //TODO Set page sur un nouveau JTextPane
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setReadMode(boolean b) {
+    private void setReadMode(boolean b) {
         if(b) {
             readMode = true;
             commandPane.setEditable(false);
@@ -153,19 +153,24 @@ public abstract class TerminalPanel extends JPanel {
         } else {
             readMode = false;
             commandPane.setEditable(true);
-            commandPane.setText("");
+            clearCommand();
             scrollPane.setViewportView(mainPane);
+            tmp.delete();
         }
     }
 
     public abstract void writeHeader();
+
+    void clearCommand() {
+        commandPane.setText("");
+    }
 
     public void parseCommand(String s) {
         //Commandes générales
         switch (s) {
             case "aide" : writeHelp();
                 break;
-            case "clear" : mainPane.setText(""); writeHeader();
+            case "effacer" : mainPane.setText(""); writeHeader();
                 break;
             default:
                 System.out.println("Unknown Command");
