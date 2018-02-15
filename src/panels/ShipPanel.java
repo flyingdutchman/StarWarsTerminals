@@ -4,15 +4,19 @@ import javax.crypto.Cipher;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.Scanner;
 import com.github.lalyos.jfiglet.FigletFont;
+import de.vandermeer.asciitable.*;
 import tools.Crypto;
 
 
 public class ShipPanel extends TerminalPanel {
 
     private final String LOG_FILE_NAME = "logs.html.encrypted";
-    private final String TEMP_LOCATION = "data/temp/temp";
+    private final String EQUIPEMENT_FILE_NAME = "equipement.csv.encrypted";
+    private final String TEMP_PATH = "data/temp/temp";
+    private final String SHIP_TERMINAL_PATH = "data/terminal_vaisseau";
 
     private String nomVaisseau;
     private String nomEquipage;
@@ -23,8 +27,8 @@ public class ShipPanel extends TerminalPanel {
 
         this.codeEquipage = codeEquipage;
 
-        File encryptedCsv = new File("data/terminal_vaisseau/spaceship_list.csv.encrypted");
-        File temp = new File(TEMP_LOCATION);
+        File encryptedCsv = new File(SHIP_TERMINAL_PATH +"/spaceship_list.csv.encrypted");
+        File temp = new File(TEMP_PATH);
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, encryptedCsv, temp);
 
         Scanner scanner;
@@ -68,8 +72,11 @@ public class ShipPanel extends TerminalPanel {
         String asciiArt = null;
         String nomVaisseauArt = null;
         try {
-            asciiArt = FigletFont.convertOneLine("Panneau de contrôle");
-            nomVaisseauArt = FigletFont.convertOneLine(nomVaisseau);
+            asciiArt = FigletFont.convertOneLine(new File("flf/small.flf"), "Panneau de contrôle");
+            //Retirer les accents et caractères spéciaux
+            nomVaisseauArt = Normalizer.normalize(nomVaisseau, Normalizer.Form.NFD);
+            nomVaisseauArt = nomVaisseauArt.replaceAll("\\p{M}", "");
+            nomVaisseauArt = FigletFont.convertOneLine(new File("flf/cybersmall.flf"), nomVaisseauArt);
             //TODO Polices figlet custom impossibles
         } catch (NullPointerException | IOException e) {
             e.printStackTrace();
@@ -99,13 +106,12 @@ public class ShipPanel extends TerminalPanel {
     }
 
     private void showLog() {
-        // Etape 1 Trouver le fichier
 
-        File toDecipher = new File("data/terminal_vaisseau/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME);
+        // Etape 1 Trouver le fichier
+        File toDecipher = new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME);
 
         // Etape 2 le decipher
-
-        File temp = new File(TEMP_LOCATION);
+        File temp = new File(TEMP_PATH);
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
 
         // Etape 3 l'afficher dans DisplayPane
@@ -114,5 +120,20 @@ public class ShipPanel extends TerminalPanel {
 
     private void showShipEquipment() {
 
+        // Etape 1 Trouver le fichier
+        File toDecipher = new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+EQUIPEMENT_FILE_NAME);
+
+        // Etape 2 le decipher
+        File temp = new File(TEMP_PATH);
+        Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
+
+        //Afficher dans console
+        /*AsciiTable at = new AsciiTable();
+        at.addRule();
+        at.addRow("row 1 col 1", "row 1 col 2");
+        at.addRule();
+        at.addRow("row 2 col 1", "row 2 col 2");
+        at.addRule();
+        System.out.println(at.render());*/
     }
 }

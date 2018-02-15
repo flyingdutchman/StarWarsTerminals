@@ -172,7 +172,7 @@ public abstract class TerminalPanel extends JPanel {
                 break;
             case "effacer" : mainPane.setText(""); writeHeader();
                 break;
-            case "gtfo" : System.exit(0);
+            case "gamemaster wins" : System.exit(0);
             default:
                 System.out.println("Unknown Command");
         }
