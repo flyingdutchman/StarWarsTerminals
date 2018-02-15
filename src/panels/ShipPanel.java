@@ -14,6 +14,7 @@ import tools.Crypto;
 public class ShipPanel extends TerminalPanel {
 
     private final String LOG_FILE_NAME = "logs.html.encrypted";
+    private final String TEMP_LOCATION = "data/temp/temp";
 
     private String nomVaisseau;
     private String nomEquipage;
@@ -25,18 +26,20 @@ public class ShipPanel extends TerminalPanel {
         this.codeEquipage = codeEquipage;
 
         File encryptedCsv = new File("data/vaisseau/spaceship_list.csv.encrypted");
-        File temp = new File("data/temp/temp");
+        File temp = new File(TEMP_LOCATION);
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, encryptedCsv, temp);
 
         Scanner scanner;
         try {
             scanner = new Scanner(temp);
             scanner.useDelimiter(",");
-            while(scanner.hasNext()){
-                String next = scanner.next();
-                if(next.equals(codeEquipage))  {
-                    nomEquipage = scanner.next();
-                    nomVaisseau = scanner.next();
+            while(scanner.hasNextLine()){
+                String next = scanner.nextLine();
+                String[] s = next.split(",");
+                if(s[0].equals(codeEquipage))  {
+                    nomEquipage = s[1];
+                    nomVaisseau = s[2];
+                    break;
                 }
             }
             scanner.close();
@@ -104,16 +107,6 @@ public class ShipPanel extends TerminalPanel {
         writeHelp();
     }
 
-    public void showLog() {
-        // Etape 1 Trouver le fichier
-
-        File toDecipher = new File("data/vaisseau/"+nomVaisseau+"/"+LOG_FILE_NAME);
-
-        // Etape 2 le decipher
-
-        // Etape 3 l'afficher dans DisplayPane
-    }
-
     //Define new commands for the main menu
     @Override
     public void parseCommand(String s) {
@@ -121,7 +114,7 @@ public class ShipPanel extends TerminalPanel {
         switch (s) {
             case "1" : showLog();
                 break;
-            case "2" :
+            case "2" : loadHTML();
                 break;
             case "3" :
                 break;
@@ -131,5 +124,19 @@ public class ShipPanel extends TerminalPanel {
                 break;
             default: super.parseCommand(s);
         }
+    }
+
+    private void showLog() {
+        // Etape 1 Trouver le fichier
+
+        File toDecipher = new File("data/vaisseau/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME);
+
+        // Etape 2 le decipher
+
+        File temp = new File(TEMP_LOCATION);
+        Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
+
+        // Etape 3 l'afficher dans DisplayPane
+        setDisplay(temp);
     }
 }

@@ -20,7 +20,7 @@ public class Main {
                             System.err.println("Veuillez entrer le code de l'équipage");
                             return;
                         }
-                        panel = new ShipPanel(args[0]);
+                        panel = new ShipPanel(args[1]);
                         break;
                     case "init" : new DataInit();
                         return;

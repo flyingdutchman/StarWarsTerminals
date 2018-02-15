@@ -5,10 +5,9 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 
 public abstract class TerminalPanel extends JPanel {
@@ -23,6 +22,8 @@ public abstract class TerminalPanel extends JPanel {
     protected JScrollPane scrollPane;
     protected SimpleAttributeSet set;
     protected StyledDocument doc;
+
+    private boolean readMode;
 
     public TerminalPanel() {
 
@@ -86,6 +87,23 @@ public abstract class TerminalPanel extends JPanel {
         });
         commandPane.addActionListener(e -> parseCommand(commandPane.getText())); //Parse command when hit enter
 
+
+        commandPane.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+            }
+
+            public void keyReleased(KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE && readMode) {
+                    setReadMode(false);
+                }
+            }
+        });
+
         SwingUtilities.invokeLater(() -> {
             commandPane.setBackground(terminalColor);
             commandPane.setFont(consoleFont);
@@ -103,6 +121,8 @@ public abstract class TerminalPanel extends JPanel {
         PrintStream printStream = new PrintStream(new tools.CustomOutputStream(mainPane, set));
         System.setOut(printStream);
 
+        readMode = false;
+
         add(scrollPane, BorderLayout.CENTER);
         add(commandPane, BorderLayout.PAGE_END);
     }
@@ -111,6 +131,31 @@ public abstract class TerminalPanel extends JPanel {
         System.out.println(
                 "- Pour réafficher les commandes tapez \"aide\"\n" +
                 "- Pour effacer la console tapez \"clear\"\n\n");
+    }
+
+    public void setDisplay(File file) {
+        setReadMode(true);
+        try {
+            displayPane.setPage(file.toURI().toURL());
+            scrollPane.setViewportView(displayPane);
+            //TODO Set page sur un nouveau JTextPane
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setReadMode(boolean b) {
+        if(b) {
+            readMode = true;
+            commandPane.setEditable(false);
+            commandPane.setText("Appuyez sur Esc pour quitter");
+
+        } else {
+            readMode = false;
+            commandPane.setEditable(true);
+            commandPane.setText("");
+            scrollPane.setViewportView(mainPane);
+        }
     }
 
     public abstract void writeHeader();
