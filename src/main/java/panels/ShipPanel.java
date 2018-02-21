@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.util.Scanner;
 import com.github.lalyos.jfiglet.FigletFont;
-import de.vandermeer.asciitable.*;
+import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
+import de.vandermeer.asciitable.v2.render.WidthAbsoluteEven;
+import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import tools.Crypto;
-
+import de.vandermeer.asciitable.v2.*;
 
 public class ShipPanel extends TerminalPanel {
 
@@ -34,7 +36,6 @@ public class ShipPanel extends TerminalPanel {
         Scanner scanner;
         try {
             scanner = new Scanner(temp);
-            scanner.useDelimiter(",");
             while(scanner.hasNextLine()){
                 String next = scanner.nextLine();
                 String[] s = next.split(",");
@@ -128,12 +129,30 @@ public class ShipPanel extends TerminalPanel {
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
 
         //Afficher dans console
-        /*AsciiTable at = new AsciiTable();
+        V2_AsciiTable at = new V2_AsciiTable();
         at.addRule();
-        at.addRow("row 1 col 1", "row 1 col 2");
-        at.addRule();
-        at.addRow("row 2 col 1", "row 2 col 2");
-        at.addRule();
-        System.out.println(at.render());*/
+
+        Scanner scanner;
+        try {
+            scanner = new Scanner(temp);
+            while(scanner.hasNextLine()) {
+                String next = scanner.nextLine();
+                if(!next.isEmpty()) {
+                    String[] s = next.split(",");
+                    at.addRow(s[0], s[1]);
+                    at.addRule();
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("Could not open crypted CSV");
+            e.printStackTrace();
+        }
+
+        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+        rend.setWidth(new WidthAbsoluteEven(76));
+        RenderedTable rt = rend.render(at);
+        System.out.println(rt);
     }
 }
