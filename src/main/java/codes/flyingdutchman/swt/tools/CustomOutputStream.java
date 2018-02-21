@@ -1,4 +1,4 @@
-package tools;
+package codes.flyingdutchman.swt.tools;
 
 import java.io.IOException;
 import java.io.OutputStream;

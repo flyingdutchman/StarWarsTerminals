@@ -1,14 +1,13 @@
-package panels;
+package codes.flyingdutchman.swt.panels;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.rtf.RTFEditorKit;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 
 public abstract class TerminalPanel extends JPanel {
 
@@ -17,9 +16,9 @@ public abstract class TerminalPanel extends JPanel {
     private final Color fontColor = Color.LIGHT_GRAY;
 
 
-    private JTextPane mainPane;
+    JTextField commandPane;
+    JTextPane mainPane;
     private JTextPane displayPane;
-    private JTextField commandPane;
     private JScrollPane scrollPane;
     private SimpleAttributeSet set;
     private StyledDocument doc;
@@ -118,7 +117,7 @@ public abstract class TerminalPanel extends JPanel {
         mainPane.setCharacterAttributes(set, true);
 
         // Permet d'utiliser le JTextPane comme une sortie console classique
-        PrintStream printStream = new PrintStream(new tools.CustomOutputStream(mainPane, set));
+        PrintStream printStream = new PrintStream(new codes.flyingdutchman.swt.tools.CustomOutputStream(mainPane, set));
         System.setOut(printStream);
 
         readMode = false;
@@ -131,6 +130,19 @@ public abstract class TerminalPanel extends JPanel {
         System.out.println(
                 "- Pour réafficher les commandes tapez \"aide\"\n" +
                 "- Pour effacer la console tapez \"effacer\"\n\n");
+    }
+
+    //Code pour loader un fichier rtf
+    public void loadFile() {
+
+        String page = "test.rtf";
+
+        mainPane.setEditorKit(new RTFEditorKit());
+        try {
+            mainPane.read(new FileInputStream(page), mainPane.getDocument());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void setTempDisplay(File file) {
@@ -171,6 +183,10 @@ public abstract class TerminalPanel extends JPanel {
             case "aide" : writeHelp();
                 break;
             case "effacer" : mainPane.setText(""); writeHeader();
+                break;
+            case "lr" : loadFile();
+                break;
+            case "lh" : setTempDisplay(new File("test.html"));
                 break;
             case "gamemaster wins" : System.exit(0);
             default:

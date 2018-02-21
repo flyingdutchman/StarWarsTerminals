@@ -1,4 +1,4 @@
-package panels;
+package codes.flyingdutchman.swt.panels;
 
 import javax.crypto.Cipher;
 import java.io.File;
@@ -6,11 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.Normalizer;
 import java.util.Scanner;
+
+import codes.flyingdutchman.swt.TerminalManager;
+import codes.flyingdutchman.swt.tools.Crypto;
 import com.github.lalyos.jfiglet.FigletFont;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
 import de.vandermeer.asciitable.v2.render.WidthAbsoluteEven;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
-import tools.Crypto;
 import de.vandermeer.asciitable.v2.*;
 
 public class ShipPanel extends TerminalPanel {
@@ -25,6 +27,7 @@ public class ShipPanel extends TerminalPanel {
     private String codeEquipage;
 
     public ShipPanel(String codeEquipage) {
+
         super();
 
         this.codeEquipage = codeEquipage;
@@ -64,7 +67,7 @@ public class ShipPanel extends TerminalPanel {
                 "- [2] Consulter équipement du vaisseau\n" +
                 "- [3] Modifier équipement du vaisseau\n" +
                 "- [4] Accèder à l'Holonet\n" +
-                "- [5] Demande Authorisation de décollage\n\n");
+                "- [5] Demande Autorisation de décollage\n\n");
         super.writeHelp();
     }
 
@@ -78,7 +81,6 @@ public class ShipPanel extends TerminalPanel {
             nomVaisseauArt = Normalizer.normalize(nomVaisseau, Normalizer.Form.NFD);
             nomVaisseauArt = nomVaisseauArt.replaceAll("\\p{M}", "");
             nomVaisseauArt = FigletFont.convertOneLine(new File("flf/cybersmall.flf"), nomVaisseauArt);
-            //TODO Polices figlet custom impossibles
         } catch (NullPointerException | IOException e) {
             e.printStackTrace();
         }
@@ -92,18 +94,25 @@ public class ShipPanel extends TerminalPanel {
     public void parseCommand(String s) {
         clearCommand();
         switch (s) {
-            case "1" : showLog();
+            case "1" :
+                showLog();
                 break;
-            case "2" : showShipEquipment();
+            case "2" :
+                showShipEquipment();
                 break;
             case "3" :
                 break;
             case "4" :
+                TerminalManager.setPanel(new HolonetPanel(new File(SHIP_TERMINAL_PATH+"/holonet")));
                 break;
             case "5" :
                 break;
             default: super.parseCommand(s);
         }
+    }
+
+    private void holonet() {
+
     }
 
     private void showLog() {
@@ -121,6 +130,10 @@ public class ShipPanel extends TerminalPanel {
 
     private void showShipEquipment() {
 
+        //Tester si accès authorisé
+
+        //Capture CommandPane answer
+
         // Etape 1 Trouver le fichier
         File toDecipher = new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+EQUIPEMENT_FILE_NAME);
 
@@ -129,6 +142,7 @@ public class ShipPanel extends TerminalPanel {
         Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
 
         //Afficher dans console
+        System.out.println("État de l'équipement de \""+nomVaisseau+"\"");
         V2_AsciiTable at = new V2_AsciiTable();
         at.addRule();
 
@@ -148,6 +162,8 @@ public class ShipPanel extends TerminalPanel {
             System.err.println("Could not open crypted CSV");
             e.printStackTrace();
         }
+
+        temp.delete();
 
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
         rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());

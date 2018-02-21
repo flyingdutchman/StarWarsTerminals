@@ -1,4 +1,6 @@
-import tools.Crypto;
+package codes.flyingdutchman.swt;
+
+import codes.flyingdutchman.swt.tools.Crypto;
 
 import javax.crypto.Cipher;
 import java.io.File;

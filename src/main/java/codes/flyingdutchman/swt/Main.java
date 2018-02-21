@@ -1,6 +1,7 @@
-import frames.FullscreenFrame;
-import panels.ShipPanel;
-import panels.TerminalPanel;
+package codes.flyingdutchman.swt;
+
+import codes.flyingdutchman.swt.frames.FullscreenFrame;
+import codes.flyingdutchman.swt.panels.ShipPanel;
 
 import java.awt.*;
 
@@ -10,7 +11,6 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(() -> {
             FullscreenFrame fullscreenFrame = new FullscreenFrame();
             fullscreenFrame.setLayout(new BorderLayout());
-            TerminalPanel panel;
 
             if(args.length != 0) {
                 switch(args[0]) {
@@ -20,7 +20,7 @@ public class Main {
                             System.err.println("Veuillez entrer le code de l'équipage");
                             return;
                         }
-                        panel = new ShipPanel(args[1]);
+                        TerminalManager.getInstance(fullscreenFrame, new ShipPanel(args[1]));
                         break;
                     case "init" : new DataInit();
                         return;
@@ -30,7 +30,6 @@ public class Main {
                 }
 
                 fullscreenFrame.setVisible(true);
-                fullscreenFrame.add(panel, BorderLayout.CENTER);
 
             } else {
                 System.err.println("Veuillez préciser un paramètre");

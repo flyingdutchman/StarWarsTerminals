@@ -1,7 +1,6 @@
-package frames;
+package codes.flyingdutchman.swt.frames;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class FullscreenFrame extends JFrame{
 

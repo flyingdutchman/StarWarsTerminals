@@ -1,4 +1,4 @@
-package tools;
+package codes.flyingdutchman.swt.tools;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
