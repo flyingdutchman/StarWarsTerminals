@@ -155,7 +155,7 @@ public class HolonetPanel extends TerminalPanel{
         System.out.println(asciiArt+"\n"+text+"\n");
         System.out.println("Écrivez les termes de votre recherches.");
         System.out.println("Appuyer sur enter pour ouvrir une catégorie ou ouvrir un fichier");
-        System.out.println("Pour remonter l'arborescence appuyer sur la flèche haut");
+        System.out.println("Pour naviguer dans l'arborescence, utilisez les flèches du clavier");
         System.out.println("Pout quitter l'Holonet, appuyer sur CTRL+C");
         System.out.println("############################# RECHERCHE ################################\n\n");
         String currentPos;
