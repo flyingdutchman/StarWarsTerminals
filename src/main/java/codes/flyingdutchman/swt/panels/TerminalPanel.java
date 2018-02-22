@@ -1,5 +1,8 @@
 package codes.flyingdutchman.swt.panels;
 
+import codes.flyingdutchman.swt.tools.Crypto;
+
+import javax.crypto.Cipher;
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -14,6 +17,7 @@ public abstract class TerminalPanel extends JPanel {
     private final Color terminalColor = new Color(20,20,27);
     private final Font consoleFont = new Font("Monospaced", Font.PLAIN, 20);
     private final Color fontColor = Color.LIGHT_GRAY;
+    private final String TEMP_PATH = "data/temp/temp";
 
 
     JTextField commandPane;
@@ -33,7 +37,7 @@ public abstract class TerminalPanel extends JPanel {
         MouseListener changeFocus = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                SwingUtilities.invokeLater(() -> commandPane.requestFocus());
+                requestPanelFocus();
             }
 
             @Override
@@ -116,9 +120,8 @@ public abstract class TerminalPanel extends JPanel {
         // Set the attributes before adding text
         mainPane.setCharacterAttributes(set, true);
 
-        // Permet d'utiliser le JTextPane comme une sortie console classique
-        PrintStream printStream = new PrintStream(new codes.flyingdutchman.swt.tools.CustomOutputStream(mainPane, set));
-        System.setOut(printStream);
+
+        requestPanelFocus();
 
         readMode = false;
 
@@ -145,6 +148,12 @@ public abstract class TerminalPanel extends JPanel {
         }
     }
 
+    File createReadableTemp(File toDecipher) {
+        File temp = new File(TEMP_PATH);
+        Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
+        return temp;
+    }
+
     void setTempDisplay(File file) {
         tmp = file;
         setReadMode(true);
@@ -169,6 +178,17 @@ public abstract class TerminalPanel extends JPanel {
             scrollPane.setViewportView(mainPane);
             tmp.delete();
         }
+    }
+
+    public void requestPanelFocus() {
+
+        // Permet d'utiliser le JTextPane comme une sortie console classique
+        PrintStream printStream = new PrintStream(new codes.flyingdutchman.swt.tools.CustomOutputStream(mainPane, set));
+        System.setOut(printStream);
+
+        SwingUtilities.invokeLater(() -> {
+            commandPane.requestFocus();
+        });
     }
 
     public abstract void writeHeader();

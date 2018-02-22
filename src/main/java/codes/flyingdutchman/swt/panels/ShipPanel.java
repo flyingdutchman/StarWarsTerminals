@@ -19,7 +19,6 @@ public class ShipPanel extends TerminalPanel {
 
     private final String LOG_FILE_NAME = "logs.html.encrypted";
     private final String EQUIPEMENT_FILE_NAME = "equipement.csv.encrypted";
-    private final String TEMP_PATH = "data/temp/temp";
     private final String SHIP_TERMINAL_PATH = "data/terminal_vaisseau";
 
     private String nomVaisseau;
@@ -32,13 +31,11 @@ public class ShipPanel extends TerminalPanel {
 
         this.codeEquipage = codeEquipage;
 
-        File encryptedCsv = new File(SHIP_TERMINAL_PATH +"/spaceship_list.csv.encrypted");
-        File temp = new File(TEMP_PATH);
-        Crypto.fileProcessor(Cipher.DECRYPT_MODE, encryptedCsv, temp);
+        File tmpCSV = createReadableTemp(new File(SHIP_TERMINAL_PATH +"/spaceship_list.csv.encrypted"));
 
         Scanner scanner;
         try {
-            scanner = new Scanner(temp);
+            scanner = new Scanner(tmpCSV);
             while(scanner.hasNextLine()){
                 String next = scanner.nextLine();
                 String[] s = next.split(",");
@@ -54,7 +51,7 @@ public class ShipPanel extends TerminalPanel {
             e.printStackTrace();
         }
 
-        temp.delete();
+        tmpCSV.delete();
 
         writeHeader();
     }
@@ -111,35 +108,18 @@ public class ShipPanel extends TerminalPanel {
         }
     }
 
-    private void holonet() {
-
-    }
-
     private void showLog() {
-
-        // Etape 1 Trouver le fichier
-        File toDecipher = new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME);
-
-        // Etape 2 le decipher
-        File temp = new File(TEMP_PATH);
-        Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
-
-        // Etape 3 l'afficher dans DisplayPane
-        setTempDisplay(temp);
+        setTempDisplay(createReadableTemp(new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME)));
     }
 
     private void showShipEquipment() {
 
         //Tester si accès authorisé
-
+        //TODO Faire mdp d'accès Mécano
         //Capture CommandPane answer
 
         // Etape 1 Trouver le fichier
-        File toDecipher = new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+EQUIPEMENT_FILE_NAME);
-
-        // Etape 2 le decipher
-        File temp = new File(TEMP_PATH);
-        Crypto.fileProcessor(Cipher.DECRYPT_MODE, toDecipher, temp);
+        File tmpEquip = createReadableTemp(new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+EQUIPEMENT_FILE_NAME));
 
         //Afficher dans console
         System.out.println("État de l'équipement de \""+nomVaisseau+"\"");
@@ -148,7 +128,7 @@ public class ShipPanel extends TerminalPanel {
 
         Scanner scanner;
         try {
-            scanner = new Scanner(temp);
+            scanner = new Scanner(tmpEquip);
             while(scanner.hasNextLine()) {
                 String next = scanner.nextLine();
                 if(!next.isEmpty()) {
@@ -163,7 +143,7 @@ public class ShipPanel extends TerminalPanel {
             e.printStackTrace();
         }
 
-        temp.delete();
+        tmpEquip.delete();
 
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
         rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());

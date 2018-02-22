@@ -25,11 +25,12 @@ public class TerminalManager {
     }
 
     public static void setPanel(TerminalPanel tp) {
-        //SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             frame.setContentPane(tp);
             frame.getContentPane().revalidate();
             frame.getContentPane().repaint();
-        //});
+            tp.requestPanelFocus();
+        });
     }
 
     public static void resetTerminal() {
