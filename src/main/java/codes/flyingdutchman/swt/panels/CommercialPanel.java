@@ -61,7 +61,7 @@ public class CommercialPanel extends TerminalPanel {
             Card card = terminal.connect("*");
             CardChannel channel = card.getBasicChannel();
 
-            // Send test command
+            // Read Card
             String s = NFCTools.read(channel);
             s = s.substring(s.indexOf("{"), s.lastIndexOf("}")+1);
             jsonObject = new JSONObject(s);
@@ -94,44 +94,43 @@ public class CommercialPanel extends TerminalPanel {
 
     private void trade() {
 
-        System.out.println("Please place the two cards on the lectors");
+        System.out.println("New Trade\n");
+
+        System.out.println("Please place the two cards on the lectors\n\n");
+
+        JSONObject json = new JSONObject();
+        json.put("Tibor", 42);
 
         try {
             // Display the list of terminals
             TerminalFactory factory = TerminalFactory.getDefault();
             List<CardTerminal> terminals = factory.terminals().list();
-            System.out.println("Terminals: " + terminals);
 
             // Use the first terminal
             CardTerminal terminalA = terminals.get(0);
             CardTerminal terminalB = terminals.get(1);
 
-            // Connect with the card
-            Card card = terminalA.connect("*");
-            System.out.println("Card: " + card);
-            CardChannel channel = card.getBasicChannel();
+            // Connect with the card A
+            Card cardA = terminalA.connect("*");
+            System.out.println("Card: " + cardA);
+            CardChannel channelA = cardA.getBasicChannel();
 
-            // Send test command
-            ResponseAPDU response = channel.transmit(new CommandAPDU( new byte[] { (byte) 0xFF, (byte) 0xB0, (byte) 0x00, (byte) 0x05, (byte) 0x10   }));
-            //ResponseAPDU response = channel.transmit(new CommandAPDU( new byte[] { (byte) 0xFF, (byte) 0xD6, (byte) 0x00, (byte) 0x05, (byte) 0x04, (byte) 0x42, (byte) 0x42, (byte) 0x42, (byte) 0x42   }));
-            System.out.println("Response: " + response.toString());
+            // Connect with the card B
+            Card cardB = terminalA.connect("*");
+            System.out.println("Card: " + cardA);
+            CardChannel channelB = cardA.getBasicChannel();
 
-            if (response.getSW1() == 0x63 && response.getSW2() == 0x00)  System.out.println("Failed");
-
-            System.out.println("UID: " + bin2hex(response.getData()));
+            NFCTools.write(channelB, json.toString());
 
             // Disconnect the card
-            card.disconnect(false);
+            cardA.disconnect(false);
 
         } catch(Exception e) {
 
-            System.out.println("Ouch: " + e.toString());
+            System.out.println(e.getMessage());
+            System.out.println("Please retry");
 
         }
-    }
-
-    private String bin2hex(byte[] data) {
-        return String.format("%0" + (data.length * 2) + "X", new BigInteger(1,data));
     }
 
     @Override
