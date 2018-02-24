@@ -20,6 +20,7 @@ public class HolonetPanel extends TerminalPanel{
     private File currentFile;
     private ArrayList<File> shownList;
     private int cursor;
+    private boolean isHacked;
 
     HolonetPanel(File root) {
 

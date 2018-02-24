@@ -4,6 +4,7 @@ import codes.flyingdutchman.swt.frames.FullscreenFrame;
 import codes.flyingdutchman.swt.panels.CommercialPanel;
 import codes.flyingdutchman.swt.panels.ShipPanel;
 import codes.flyingdutchman.swt.panels.TerminalPanel;
+import codes.flyingdutchman.swt.tools.DataInit;
 
 import java.awt.*;
 

@@ -154,6 +154,7 @@ public abstract class TerminalPanel extends JPanel {
         return temp;
     }
 
+    //TODO détecter hack ici fichier.hack.encrypted
     void setTempDisplay(File file) {
         tmp = file;
         setReadMode(true);

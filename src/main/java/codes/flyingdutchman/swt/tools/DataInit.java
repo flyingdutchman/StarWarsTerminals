@@ -1,6 +1,4 @@
-package codes.flyingdutchman.swt;
-
-import codes.flyingdutchman.swt.tools.Crypto;
+package codes.flyingdutchman.swt.tools;
 
 import javax.crypto.Cipher;
 import java.io.File;
@@ -11,12 +9,12 @@ import java.nio.file.Paths;
 /**
  * This class is responsible for the creation of all the crypted data used in the program
  */
-class DataInit {
+public class DataInit {
 
     private final String RAW_DATA_PATH = "data_raw";
     private final String FINAL_DATA_PATH = "data";
 
-    DataInit() {
+    public DataInit() {
 
         System.out.println("Deleting old data");
         deleteDir(new File(FINAL_DATA_PATH));

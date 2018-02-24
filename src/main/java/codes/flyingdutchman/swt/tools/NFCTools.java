@@ -14,7 +14,6 @@ public class NFCTools {
 
     public static String read(CardChannel channel) {
 
-        String s;
         ArrayList<Byte> arrayList = new ArrayList<>();
 
         try {
@@ -25,7 +24,13 @@ public class NFCTools {
             while (contin) {
                 ResponseAPDU response = channel.transmit(new CommandAPDU(new byte[]{(byte) 0xFF, (byte) 0xB0, (byte) 0x00, cnt, (byte) 0x04 }));
                 byte[] res = response.getData();
+                //System.err.println(bin2hex(res));
                 for(byte by : res) {
+                    if(cnt == (byte) 0xE0) {
+                        contin = false;
+                        System.out.println("Votre carte ne contient aucune donnée...");
+                        break;
+                    }
                     if(by == (byte)0xFE){
                         contin = false;
                         break;
@@ -67,7 +72,7 @@ public class NFCTools {
             formatedMessage[i] = (byte) 0x00;
         }
 
-        System.err.println(bin2hex(formatedMessage));
+        //System.err.println(bin2hex(formatedMessage));
 
         byte payloadLength = (byte) (message.length + 3);
         byte recordLength = (byte) (payloadLength + 4 );
