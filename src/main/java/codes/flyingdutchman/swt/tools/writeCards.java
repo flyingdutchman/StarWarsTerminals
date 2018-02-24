@@ -24,7 +24,6 @@ public class writeCards {
 
             // Use the first terminal
             CardTerminal terminalA = terminals.get(0);
-            CardTerminal terminalB = terminals.get(1);
 
             // Connect with the card A
             System.out.print("Card Slot 1: ");
@@ -39,7 +38,7 @@ public class writeCards {
                 Scanner keyboard = new Scanner(System.in);
                 System.out.println("Enter next key/value seperated with a space");
                 s = keyboard.nextLine();
-                if(s.equals("stop"))
+                if(s.equals("s"))
                     break;
                 String[] split = s.split(" ");
                 json.put(split[0], split[1]);

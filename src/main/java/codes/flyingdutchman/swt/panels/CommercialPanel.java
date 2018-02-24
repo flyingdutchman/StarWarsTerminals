@@ -25,7 +25,8 @@ public class CommercialPanel extends TerminalPanel {
         D_WELCOME, P_WELCOME, CONSULTING, D_TRADE_J1, P_TRADE_J1, D_TRADE_J2, P_TRADE_J2, D_CONFIRMATION, P_CONFIRMATION, WRITE
     }
 
-    private final String[] ressources = new String[] {"credits", "charbon", "minerai", "or", "uranium"};
+    private final String[] ressources = new String[] {"munitions_et_armes", "bacta", "epices_brutes", "orodium", "droide_de_combat", "donium", "objet_art_heteroclyte",
+            "prince_actionnaire", "gant_de_xim", "vieil_hyperdrive", "lot_armures_stormtroopers", "porto"};
 
     private State nextState;
     private JSONObject jsonA;
@@ -203,8 +204,8 @@ public class CommercialPanel extends TerminalPanel {
 
             System.out.println("Éléments échangeables :");
 
-            for(String s : ressources) {
-                System.out.print(s+" ");
+            for(int i = 0; i < ressources.length-5; i++) {
+                System.out.print(ressources[i]+" ");
             }
 
             System.out.println("\n\nClient n°1 veuillez décrire ce que vous souhaiter échanger sous le format :");

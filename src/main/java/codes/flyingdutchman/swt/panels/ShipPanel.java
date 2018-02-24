@@ -22,7 +22,6 @@ public class ShipPanel extends TerminalPanel {
     private final String SHIP_TERMINAL_PATH = "data/terminal_vaisseau";
 
     private String nomVaisseau;
-    private String nomEquipage;
     private String codeEquipage;
 
     public ShipPanel(String codeEquipage) {
@@ -40,7 +39,6 @@ public class ShipPanel extends TerminalPanel {
                 String next = scanner.nextLine();
                 String[] s = next.split(",");
                 if(s[0].equals(codeEquipage))  {
-                    nomEquipage = s[1];
                     nomVaisseau = s[2];
                     break;
                 }
@@ -61,10 +59,7 @@ public class ShipPanel extends TerminalPanel {
         System.out.println(
                 "\nCOMMANDES DISPONIBLES :\n" +
                 "- [1] Journal de bord\n" +
-                "- [2] Consulter équipement du vaisseau\n" +
-                "- [3] Modifier équipement du vaisseau\n" +
-                "- [4] Accèder à l'Holonet\n" +
-                "- [5] Demande Autorisation de décollage\n\n");
+                "- [2] Accèder à l'Holonet\n\n");
         super.writeHelp();
     }
 
@@ -95,14 +90,9 @@ public class ShipPanel extends TerminalPanel {
                 showLog();
                 break;
             case "2" :
-                showShipEquipment();
-                break;
-            case "3" :
-                break;
-            case "4" :
                 TerminalManager.setPanel(new HolonetPanel(new File(SHIP_TERMINAL_PATH+"/holonet")));
                 break;
-            case "5" :
+            case "ferailleur4life":
                 break;
             default: super.parseCommand(s);
         }
@@ -112,43 +102,43 @@ public class ShipPanel extends TerminalPanel {
         setTempDisplay(createReadableTemp(new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+LOG_FILE_NAME)));
     }
 
-    private void showShipEquipment() {
-
-        //Tester si accès authorisé
-        //TODO Faire mdp d'accès Mécano
-        //Capture CommandPane answer
-
-        // Etape 1 Trouver le fichier
-        File tmpEquip = createReadableTemp(new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+EQUIPEMENT_FILE_NAME));
-
-        //Afficher dans console
-        System.out.println("État de l'équipement de \""+nomVaisseau+"\"");
-        V2_AsciiTable at = new V2_AsciiTable();
-        at.addRule();
-
-        Scanner scanner;
-        try {
-            scanner = new Scanner(tmpEquip);
-            while(scanner.hasNextLine()) {
-                String next = scanner.nextLine();
-                if(!next.isEmpty()) {
-                    String[] s = next.split(",");
-                    at.addRow(s[0], s[1]);
-                    at.addRule();
-                }
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.err.println("Could not open crypted CSV");
-            e.printStackTrace();
-        }
-
-        tmpEquip.delete();
-
-        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
-        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
-        rend.setWidth(new WidthAbsoluteEven(76));
-        RenderedTable rt = rend.render(at);
-        System.out.println(rt);
-    }
+//    private void showShipEquipment() {
+//
+//        //Tester si accès authorisé
+//        //TODO Faire mdp d'accès Mécano
+//        //Capture CommandPane answer
+//
+//        // Etape 1 Trouver le fichier
+//        File tmpEquip = createReadableTemp(new File(SHIP_TERMINAL_PATH+"/vaisseaux/"+codeEquipage+"/"+EQUIPEMENT_FILE_NAME));
+//
+//        //Afficher dans console
+//        System.out.println("État de l'équipement de \""+nomVaisseau+"\"");
+//        V2_AsciiTable at = new V2_AsciiTable();
+//        at.addRule();
+//
+//        Scanner scanner;
+//        try {
+//            scanner = new Scanner(tmpEquip);
+//            while(scanner.hasNextLine()) {
+//                String next = scanner.nextLine();
+//                if(!next.isEmpty()) {
+//                    String[] s = next.split(",");
+//                    at.addRow(s[0], s[1]);
+//                    at.addRule();
+//                }
+//            }
+//            scanner.close();
+//        } catch (FileNotFoundException e) {
+//            System.err.println("Could not open crypted CSV");
+//            e.printStackTrace();
+//        }
+//
+//        tmpEquip.delete();
+//
+//        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+//        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+//        rend.setWidth(new WidthAbsoluteEven(76));
+//        RenderedTable rt = rend.render(at);
+//        System.out.println(rt);
+//    }
 }
